@@ -41,7 +41,7 @@ function SideBar() {
         </div>
         <div className="sidebar-icons">
           <img src={img4} alt="" />
-          <Link className="p" to={'/bookingdetails'}>Booking details</Link>
+          <Link className="p" to={'/reservations'}>Reservations Details</Link>
         </div>
         <div className="sidebar-icons">
           <img src={img5} alt="" />
