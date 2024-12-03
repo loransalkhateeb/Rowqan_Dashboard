@@ -1,0 +1,41 @@
+.all-btn{
+  display: flex;
+  gap: 50px;
+  margin-top: 80px;
+}
+
+.create-btn{
+    height: 60px;
+    width: 200px;
+    font-weight: bolder;
+}
+
+
+.reservation-dates-table h3 {
+  margin-top: 120px; 
+}
+
+
+.create-btn {
+  transition: box-shadow 0.3s ease;
+}
+
+.create-btn:hover {
+  box-shadow: 0px 4px 8px 0px rgba(242, 199, 157, 0.8); 
+}
+
+
+.book-now-btn {
+  background-color: #F2C79D;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.book-now-btn:hover {
+  background-color: #6DA6DB;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}

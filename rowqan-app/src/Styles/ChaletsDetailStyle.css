@@ -1,0 +1,16 @@
+h4 {
+    margin-top: 40px;
+    background: linear-gradient(to right, #6DA6DB, #F2C79D); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+  }
+  
+
+  .search-container input {
+    background-color: rgba(109, 166, 219, 0.23);
+    width: 800px;
+    height: 48px;
+    border-radius: 16px;
+    border-style: solid;
+    border-color: black;
+  }
