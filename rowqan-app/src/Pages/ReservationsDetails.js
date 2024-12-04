@@ -6,7 +6,7 @@ import { API_URL } from "../App";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function ReservationsDetails() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [reservationData, setReservationData] = useState([]);
   const [error, setError] = useState("");
   const [selectedType, setSelectedType] = useState("");
@@ -31,9 +31,9 @@ function ReservationsDetails() {
   const fetchChaletsReservations = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/ReservationDates/getAllReservationDates/${lang}`
+        `${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`
       );
-      setReservationData(response.data.reservationDates);
+      setReservationData(response.data.reservations);
     } catch (error) {
       console.error("Error fetching chalet reservations:", error);
       setError("Error fetching chalet reservations.");
@@ -66,7 +66,7 @@ function ReservationsDetails() {
 
   const handleBookNow = (chaletId) => {
     console.log(`Chalet ID ${chaletId} booked!`);
-    navigate(`/detailsChaletPage/${chaletId}`);  
+    navigate(`/detailsChaletPage/${chaletId}`); 
   };
 
   const handleButtonClick = (type) => {
@@ -113,25 +113,9 @@ function ReservationsDetails() {
               <tr>
                 <th>ID</th>
                 <th>Date</th>
-                {selectedType === "chalets" ? (
-                  <>
-                    <th>Chalet Title</th>
-                    <th>Right Time</th>
-                    <th>Right Time Name</th>
-                    <th>See Details for the spcefic chalet </th>
-                  </>
-                ) : selectedType === "events" ? (
-                  <>
-                    <th>Event Title</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                  </>
-                ) : selectedType === "lands" ? (
-                  <>
-                    <th>Land Title</th>
-                    <th>Time</th>
-                  </>
-                ) : null}
+                <th>Chalet Title</th>
+                <th>Status</th>
+                <th>See Details</th>
               </tr>
             </thead>
             <tbody>
@@ -140,70 +124,22 @@ function ReservationsDetails() {
                   <tr key={reservation.id}>
                     <td>{reservation.id}</td>
                     <td>{new Date(reservation.date).toLocaleString()}</td>
-                    {selectedType === "chalets" ? (
-                      <>
-                        <td>
-                          {reservation.Chalet
-                            ? reservation.Chalet.title
-                            : "N/A"}
-                        </td>
-                        <td>
-                          {reservation.RightTimeModel
-                            ? `${reservation.RightTimeModel.time}`
-                            : "N/A"}
-                        </td>
-                        <td>
-                          {reservation.RightTimeModel
-                            ? `${reservation.RightTimeModel.name}`
-                            : "N/A"}
-                        </td>
-                        <td>
-                          <button
-                            className="book-now-btn"
-                            onClick={() => handleBookNow(reservation.Chalet.id)}
-                          >
-                           See Details
-                          </button>
-                        </td>
-                      </>
-                    ) : selectedType === "events" ? (
-                      <>
-                        <td>
-                          {reservation.Available_Event
-                            ? reservation.Available_Event.title
-                            : "N/A"}
-                        </td>
-                        <td>
-                          {reservation.start_time
-                            ? reservation.start_time
-                            : "N/A"}
-                        </td>
-                        <td>
-                          {reservation.end_time ? reservation.end_time : "N/A"}
-                        </td>
-                      </>
-                    ) : selectedType === "lands" ? (
-                      <>
-                        <td>
-                          {reservation.CategoriesLand
-                            ? reservation.CategoriesLand.title
-                            : "N/A"}
-                        </td>
-                        <td>{reservation.time ? reservation.time : "N/A"}</td>
-                      </>
-                    ) : null}
+                    <td>{reservation.chalet ? reservation.chalet.title : "N/A"}</td>
+                    <td>{reservation.status}</td>
+                    <td>
+                      <button
+                        className="book-now-btn"
+                        onClick={() => handleBookNow(reservation.chalet.id)}
+                      >
+                        See Details
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan={
-                      selectedType === "chalets"
-                        ? 6
-                        : selectedType === "events"
-                        ? 4
-                        : 4
-                    }
+                    colSpan={5}
                   >
                     {error || "No reservation data found"}
                   </td>

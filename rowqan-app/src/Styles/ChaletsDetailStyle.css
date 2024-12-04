@@ -14,3 +14,29 @@ h4 {
     border-style: solid;
     border-color: black;
   }
+
+
+/* تأكيد أن التقويم يغطي عرض الصفحة بالكامل */
+.react-calendar {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+
+
+  /* تلوين التاريخ المحجوز باللون الأحمر */
+/* التأكد من تلوين التواريخ المحجوزة باللون الأحمر */
+.react-calendar__tile.reserved-date {
+  background-color: red !important;
+  color: white !important;
+  border-radius: 50%;
+  text-align: center;
+}
+
+/* النص الذي يظهر تحت التاريخ المحجوز */
+.reserved-label {
+  color: white;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
+}
