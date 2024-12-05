@@ -5,12 +5,17 @@ import "../../Styles/ChaletsDetailStyle.css";
 import { useParams } from "react-router-dom";
 import { API_URL } from "../../App";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; 
+import "react-calendar/dist/Calendar.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 function DetailsChaletPage() {
   const { id } = useParams();
   const [chaletImages, setChaletImages] = useState([]);
-  const [chaletDetails, setChaletDetails] = useState([]);
+  const [chaletDetails, setChaletDetails] = useState([]); 
   const [reservationDates, setReservationDates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +34,6 @@ function DetailsChaletPage() {
         setError("Failed to fetch chalet images.");
       }
     };
-    
 
     const fetchChaletDetails = async () => {
       try {
@@ -60,37 +64,6 @@ function DetailsChaletPage() {
     fetchReservationDates();
   }, [id]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const filteredDetails = Array.isArray(chaletDetails)
-    ? chaletDetails.filter(
-        (detail) =>
-          detail.Detail_Type &&
-          detail.Detail_Type.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
-
-  const filteredReservationDates = Array.isArray(reservationDates)
-    ? reservationDates.filter(
-        (reservation) =>
-          (reservation.RightTimeModel &&
-            reservation.RightTimeModel.name &&
-            reservation.RightTimeModel.name
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())) ||
-          (reservation.date &&
-            reservation.date.toLowerCase().includes(searchTerm.toLowerCase()))
-      )
-    : [];
-
-  const isReservedDate = (date) => {
-    const currentDate = new Date().toISOString().split("T")[0];
-    const reservationDate = new Date(date).toISOString().split("T")[0];
-    return reservationDate === currentDate;
-  };
-
   const reservedDates = reservationDates.map(
     (reservation) => new Date(reservation.date).toISOString().split("T")[0]
   );
@@ -102,102 +75,97 @@ function DetailsChaletPage() {
         <h4>Details Chalet Page</h4>
         {error && <p className="error">{error}</p>}
 
-        <div className="search-container">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search Details"
-            className="search-input"
-          />
-        </div>
-
         <div className="chalet-images">
-          <h5 style={{ marginTop: "20px" }}>Chalet Images</h5>
-          <div className="images-grid">
+          <Swiper
+            modules={[Pagination, Navigation]}
+            spaceBetween={20}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            style={{ width: "100%", height: "auto" }}
+          >
             {chaletImages.map((image, index) => (
-              <img
-                style={{
-                  width: "220px",
-                  marginLeft: "20px",
-                  marginBottom: "50px",
-                  marginTop: "20px",
-                }}
-                key={index}
-                src={`${API_Images}/${image}`}
-                alt={`Chalet ${index + 1}`}
-                className="chalet-image"
-              />
+              <SwiperSlide key={index}>
+                <img
+                  style={{
+                    width: "80%",
+                    height: "700px",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                    margin: "0 auto",
+                    display: "block",
+                  }}
+                  src={`${API_Images}/${image}`}
+                  alt={`Chalet ${index + 1}`}
+                  className="chalet-image"
+                />
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </div>
 
         <div className="chalet-details">
           <h5>Chalet Details</h5>
-          <ul>
-            {filteredDetails.map((detail) => (
-              <li key={detail.id} className="detail-item">
-                {detail.Detail_Type}
-              </li>
-            ))}
-          </ul>
-
-          <h5>Additional Chalet Information</h5>
-          {chaletDetails.length > 0 && (
-            <>
-              <ul>
-                <li>
-                  <strong>Initial Amount:</strong>{" "}
-                  {chaletDetails[0].initial_amount}
-                </li>
-                <li>
-                  <strong>Reserve Price:</strong>{" "}
-                  {chaletDetails[0].reserve_price}
-                </li>
-                <li>
+          <div className="details-grid">
+            {chaletDetails.length > 0 ? (
+              <>
+                <div className="detail-card">
+                  <strong>Initial Amount:</strong> {chaletDetails[0].initial_amount}
+                </div>
+                <div className="detail-card">
+                  <strong>Reserve Price:</strong> {chaletDetails[0].reserve_price}
+                </div>
+                <div className="detail-card">
                   <strong>Total Amount:</strong> {chaletDetails[0].total_amount}
-                </li>
-                <li>
+                </div>
+                <div className="detail-card">
                   <strong>Cashback:</strong> {chaletDetails[0].cashback}
-                </li>
-                <li>
-                  <strong>Number of Days:</strong>{" "}
-                  {chaletDetails[0].number_of_days}
-                </li>
-                <li>
-                  <strong>Additional Visitors:</strong>{" "}
-                  {chaletDetails[0].additional_visitors}
-                </li>
-              </ul>
-            </>
-          )}
+                </div>
+                <div className="detail-card">
+                  <strong>Number of Days:</strong> {chaletDetails[0].number_of_days}
+                </div>
+                <div className="detail-card">
+                  <strong>Additional Visitors:</strong> {chaletDetails[0].additional_visitors}
+                </div>
+              </>
+            ) : (
+              <p>No details available for this chalet.</p>
+            )}
+          </div>
 
-          <div className="user-info">
-            <h5>User Information</h5>
-            <ul>
-              {chaletDetails.length > 0 && (
-                <>
-                  <li>
-                    <strong>User Name:</strong> {chaletDetails[0].user.name}
-                  </li>
-                  <li>
-                    <strong>User Email:</strong> {chaletDetails[0].user.email}
-                  </li>
-                  <li>
-                    <strong>User ID:</strong> {chaletDetails[0].user.id}
-                  </li>
-                </>
-              )}
-            </ul>
+          <h5>User Information</h5>
+          <div className="details-grid">
+            {chaletDetails.length > 0 ? (
+              <>
+                <div className="detail-card">
+                  <strong>User Name:</strong> {chaletDetails[0].user.name}
+                </div>
+                <div className="detail-card">
+                  <strong>User Email:</strong> {chaletDetails[0].user.email}
+                </div>
+                <div className="detail-card">
+                  <strong>User ID:</strong> {chaletDetails[0].user.id}
+                </div>
+              </>
+            ) : (
+              <p>No user information available.</p>
+            )}
           </div>
 
           <h5>Right Time</h5>
           {chaletDetails.length > 0 && (
-            <>
-              <p>
+            <div className="details-grid">
+              <div className="detail-card">
                 <strong>Time:</strong> {chaletDetails[0].right_time.time}
-              </p>
-            </>
+              </div>
+              <div className="detail-card">
+                <strong>Name For Time:</strong> {chaletDetails[0].right_time.name}
+              </div>
+            </div>
           )}
         </div>
 
@@ -207,20 +175,20 @@ function DetailsChaletPage() {
             onChange={() => {}}
             value={new Date()}
             tileClassName={({ date, view }) => {
-              if (
-                view === "month" &&
-                reservedDates.includes(date.toISOString().split("T")[0])
-              ) {
-                return "reserved-date";
+              const formattedDate = date.toISOString().split("T")[0];
+              if (view === "month" && reservedDates.includes(formattedDate)) {
+                return "reserved-date"; 
               }
               return null;
             }}
             tileContent={({ date, view }) => {
-              if (
-                view === "month" &&
-                reservedDates.includes(date.toISOString().split("T")[0])
-              ) {
-                return <div className="reserved-label">Reserved</div>;
+              const formattedDate = date.toISOString().split("T")[0];
+              if (view === "month" && reservedDates.includes(formattedDate)) {
+                return (
+                  <>
+                    <div className="reserved-label">Reserved</div> 
+                  </>
+                );
               }
               return null;
             }}
