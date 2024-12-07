@@ -15,9 +15,9 @@ import "swiper/css/navigation";
 function DetailsChaletPage() {
   const { id } = useParams();
   const [chaletImages, setChaletImages] = useState([]);
-  const [chaletDetails, setChaletDetails] = useState([]); 
+  const [chaletDetails, setChaletDetails] = useState([]);
   const [reservationDates, setReservationDates] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [additionalChaletDetails, setAdditionalChaletDetails] = useState([]);
   const [error, setError] = useState("");
 
   const API_Images = "https://res.cloudinary.com/durjqlivi";
@@ -50,22 +50,43 @@ function DetailsChaletPage() {
     const fetchReservationDates = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/ReservationDates/getreservationdatesbychalet/${id}/en`
+          `${API_URL}/ReservationsChalets/getAllReservationChaletById/${id}/en`
         );
-        setReservationDates(response.data.reservationDates || []);
+
+        const dates = response.data.reservation
+          ? [
+              new Date(response.data.reservation.date).toLocaleDateString(
+                "en-CA"
+              ),
+            ]
+          : [];
+        setReservationDates(dates);
       } catch (error) {
         console.error("Error fetching reservation dates:", error);
         setError("Failed to fetch reservation dates.");
       }
     };
 
+    const fetchAdditionalChaletDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}/chaletsdetails/getChaletDetailsByChaletId/${id}/en`
+        );
+        setAdditionalChaletDetails(response.data.chaletDetails || []);
+      } catch (error) {
+        console.error("Error fetching additional chalet details:", error);
+        setError("Failed to fetch additional chalet details.");
+      }
+    };
+
     fetchChaletImages();
     fetchChaletDetails();
     fetchReservationDates();
+    fetchAdditionalChaletDetails();
   }, [id]);
 
-  const reservedDates = reservationDates.map(
-    (reservation) => new Date(reservation.date).toISOString().split("T")[0]
+  const reservedDates = reservationDates.map((reservation) =>
+    new Date(reservation).toLocaleDateString("en-CA")
   );
 
   return (
@@ -112,61 +133,60 @@ function DetailsChaletPage() {
           <h5>Chalet Details</h5>
           <div className="details-grid">
             {chaletDetails.length > 0 ? (
-              <>
-                <div className="detail-card">
-                  <strong>Initial Amount:</strong> {chaletDetails[0].initial_amount}
+              chaletDetails.map((reservation, index) => (
+                <div key={index} className="detail-card">
+                  <div>
+                    <strong>Chalet Title:</strong>{" "}
+                    {reservation.chalet?.title || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Initial Amount:</strong>{" "}
+                    {reservation.initial_amount || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Reserve Price:</strong>{" "}
+                    {reservation.reserve_price || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Total Amount:</strong>{" "}
+                    {reservation.total_amount || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Cashback:</strong> {reservation.cashback || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Number of Days:</strong>{" "}
+                    {reservation.number_of_days || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Additional Visitors:</strong>{" "}
+                    {reservation.additional_visitors || "N/A"}
+                  </div>
+                  <div>
+                    <strong>Right Time:</strong>{" "}
+                    {reservation.right_time?.time || "N/A"}
+                  </div>
                 </div>
-                <div className="detail-card">
-                  <strong>Reserve Price:</strong> {chaletDetails[0].reserve_price}
-                </div>
-                <div className="detail-card">
-                  <strong>Total Amount:</strong> {chaletDetails[0].total_amount}
-                </div>
-                <div className="detail-card">
-                  <strong>Cashback:</strong> {chaletDetails[0].cashback}
-                </div>
-                <div className="detail-card">
-                  <strong>Number of Days:</strong> {chaletDetails[0].number_of_days}
-                </div>
-                <div className="detail-card">
-                  <strong>Additional Visitors:</strong> {chaletDetails[0].additional_visitors}
-                </div>
-              </>
+              ))
             ) : (
-              <p>No details available for this chalet.</p>
+              <p>No details available for chalets.</p>
             )}
           </div>
+        </div>
 
-          <h5>User Information</h5>
+        <div className="additional-details">
+          <h5>Additional Chalet Features</h5>
           <div className="details-grid">
-            {chaletDetails.length > 0 ? (
-              <>
-                <div className="detail-card">
-                  <strong>User Name:</strong> {chaletDetails[0].user.name}
+            {additionalChaletDetails.length > 0 ? (
+              additionalChaletDetails.map((detail, index) => (
+                <div key={index} className="detail-card">
+                  <strong>{detail.Detail_Type}</strong>
                 </div>
-                <div className="detail-card">
-                  <strong>User Email:</strong> {chaletDetails[0].user.email}
-                </div>
-                <div className="detail-card">
-                  <strong>User ID:</strong> {chaletDetails[0].user.id}
-                </div>
-              </>
+              ))
             ) : (
-              <p>No user information available.</p>
+              <p>No additional details available for this chalet.</p>
             )}
           </div>
-
-          <h5>Right Time</h5>
-          {chaletDetails.length > 0 && (
-            <div className="details-grid">
-              <div className="detail-card">
-                <strong>Time:</strong> {chaletDetails[0].right_time.time}
-              </div>
-              <div className="detail-card">
-                <strong>Name For Time:</strong> {chaletDetails[0].right_time.name}
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="reservation-dates">
@@ -175,20 +195,16 @@ function DetailsChaletPage() {
             onChange={() => {}}
             value={new Date()}
             tileClassName={({ date, view }) => {
-              const formattedDate = date.toISOString().split("T")[0];
+              const formattedDate = date.toLocaleDateString("en-CA");
               if (view === "month" && reservedDates.includes(formattedDate)) {
-                return "reserved-date"; 
+                return "reserved-date";
               }
               return null;
             }}
             tileContent={({ date, view }) => {
-              const formattedDate = date.toISOString().split("T")[0];
-              if (view === "month" && reservedDates.includes(formattedDate)) {
-                return (
-                  <>
-                    <div className="reserved-label">Reserved</div> 
-                  </>
-                );
+              const formattedDate = date.toLocaleDateString("en-CA");
+              if (reservedDates.includes(formattedDate)) {
+                return <div className="reserved-label">Reserved</div>;
               }
               return null;
             }}

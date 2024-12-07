@@ -44,10 +44,6 @@ function SideBar() {
           <Link className="p" to={'/reservations'}>Reservations Details</Link>
         </div>
         <div className="sidebar-icons">
-          <img src={img5} alt="" />
-          <Link className="p" to={'/refunds'}>Refunds</Link>
-        </div>{" "}
-        <div className="sidebar-icons">
           <img src={img6} alt="" />
           <Link className="p" to={'/messages'}>Messages</Link>
         </div>

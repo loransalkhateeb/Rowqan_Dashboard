@@ -39,3 +39,37 @@
   background-color: #6DA6DB;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+
+
+.create-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.create-btn:hover {
+  background-color: #0056b3; 
+  transform: translateY(-3px);
+}
+
+.create-btn:active {
+  transform: translateY(1px); 
+}
+
+.create-btn-container {
+  text-align: center; 
+  margin-top: 10px; 
+}
+
+.table td button {
+  margin: 0 auto; 
+  display: block; 
+  width: 150px; 
+}

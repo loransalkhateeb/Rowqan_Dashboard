@@ -1,0 +1,38 @@
+.details-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center; 
+}
+
+.detail-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 30px; 
+  width: 500px; 
+  height: auto; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+  font-size: 16px; 
+}
+
+.detail-card.large-card {
+  width: 550px;
+}
+
+.detail-card:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+  background-color: #f2c79d; 
+}
+
+h6 {
+  font-size: 20px; 
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.detail-card div {
+  margin-bottom: 10px;
+}

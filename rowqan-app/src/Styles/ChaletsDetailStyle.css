@@ -131,3 +131,53 @@ h4 {
 
 
 
+
+.reserved-date {
+  background-color: red !important; 
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+}
+
+
+.reserved-date .reserved-label {
+  font-size: 12px;
+  color: white;
+  margin-top: 5px;
+}
+
+
+.react-calendar__tile:hover {
+  background-color: #f2c79d;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+.details-page > * {
+  margin-bottom: 55px; 
+}
+
+.details-grid .detail-card {
+  margin-bottom: 15px; 
+}
+
+
+.detail-card {
+  width: 300px;
+  padding: 20px;
+  margin: 10px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: inline-block; 
+}
+
+.details-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  justify-content: center; 
+}
