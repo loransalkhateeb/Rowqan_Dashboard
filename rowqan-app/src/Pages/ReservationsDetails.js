@@ -3,7 +3,7 @@ import axios from "axios";
 import NavBar from "../Components/NavBar";
 import "../Styles/ReservationsDetails.css";
 import { API_URL } from "../App";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ReservationsDetails() {
   const navigate = useNavigate();
@@ -11,12 +11,7 @@ function ReservationsDetails() {
   const [error, setError] = useState("");
   const [selectedType, setSelectedType] = useState("");
 
-  const location = useLocation();
-  const lang =
-    location.pathname.split("/")[1] === "ar" ||
-    location.pathname.split("/")[1] === "en"
-      ? location.pathname.split("/")[1]
-      : "en";
+  const lang = "en";
 
   useEffect(() => {
     if (selectedType === "chalets") {
@@ -34,9 +29,11 @@ function ReservationsDetails() {
         `${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`
       );
       setReservationData(response.data.reservations);
+      setError(""); 
     } catch (error) {
       console.error("Error fetching chalet reservations:", error);
       setError("Error fetching chalet reservations.");
+      setReservationData([]); 
     }
   };
 
@@ -46,9 +43,11 @@ function ReservationsDetails() {
         `${API_URL}/reservationsEvents/getAllreservationevents/${lang}`
       );
       setReservationData(response.data.reservations);
+      setError(""); 
     } catch (error) {
       console.error("Error fetching event reservations:", error);
       setError("Error fetching event reservations.");
+      setReservationData([]); 
     }
   };
 
@@ -58,19 +57,26 @@ function ReservationsDetails() {
         `${API_URL}/reservationLands/getreservationslands/${lang}`
       );
       setReservationData(response.data.reservations);
+      setError(""); 
     } catch (error) {
       console.error("Error fetching land reservations:", error);
       setError("Error fetching land reservations.");
+      setReservationData([]); 
     }
-  };
-
-  const handleBookNow = (chaletId) => {
-    console.log(`Chalet ID ${chaletId} booked!`);
-    navigate(`/detailsChaletPage/${chaletId}`); 
   };
 
   const handleButtonClick = (type) => {
     setSelectedType(type);
+  };
+
+  const handleSeeDetails = (reservation) => {
+    if (selectedType === "chalets") {
+      navigate(`/detailsChaletPage/${reservation.id}`);
+    } else if (selectedType === "events") {
+      navigate(`/detailsEventsPage/${reservation.Available_Event?.id || reservation.available_event_id}`);
+    } else if (selectedType === "lands") {
+      navigate(`/landsDetails/${reservation.available_land_id}`);
+    }
   };
 
   return (
@@ -103,9 +109,7 @@ function ReservationsDetails() {
         <div className="reservation-dates-table">
           <h3>
             {selectedType
-              ? `${
-                  selectedType.charAt(0).toUpperCase() + selectedType.slice(1)
-                } Reservations`
+              ? `${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Reservations`
               : "All Reservations"}
           </h3>
           <table className="table table-bordered table-striped">
@@ -113,8 +117,24 @@ function ReservationsDetails() {
               <tr>
                 <th>ID</th>
                 <th>Date</th>
-                <th>Chalet Title</th>
-                <th>Status</th>
+                {selectedType === "events" ? (
+                  <>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Event Title</th>
+                  </>
+                ) : selectedType === "chalets" ? (
+                  <>
+                    <th>Chalet Title</th>
+                    <th>Status</th>
+                  </>
+                ) : selectedType === "lands" ? (
+                  <>
+                    <th>Land Name</th>
+                    <th>Price</th>
+                    <th>Time</th>
+                  </>
+                ) : null}
                 <th>See Details</th>
               </tr>
             </thead>
@@ -123,13 +143,29 @@ function ReservationsDetails() {
                 reservationData.map((reservation) => (
                   <tr key={reservation.id}>
                     <td>{reservation.id}</td>
-                    <td>{new Date(reservation.date).toLocaleString()}</td>
-                    <td>{reservation.chalet ? reservation.chalet.title : "N/A"}</td>
-                    <td>{reservation.status}</td>
+                    <td>{new Date(reservation.date).toLocaleDateString()}</td>
+                    {selectedType === "events" ? (
+                      <>
+                        <td>{reservation.start_time}</td>
+                        <td>{reservation.end_time}</td>
+                        <td>{reservation.Available_Event?.title || "N/A"}</td>
+                      </>
+                    ) : selectedType === "chalets" ? (
+                      <>
+                        <td>{reservation.chalet ? reservation.chalet.title : "N/A"}</td>
+                        <td>{reservation.status}</td>
+                      </>
+                    ) : selectedType === "lands" ? (
+                      <>
+                        <td>{reservation.CategoriesLand?.title || "N/A"}</td>
+                        <td>{reservation.CategoriesLand?.price || "N/A"}</td>
+                        <td>{reservation.time || "N/A"}</td> 
+                      </>
+                    ) : null}
                     <td>
                       <button
-                        className="book-now-btn"
-                        onClick={() => handleBookNow(reservation.chalet.id)}
+                        className="create-btn"
+                        onClick={() => handleSeeDetails(reservation)}
                       >
                         See Details
                       </button>
@@ -138,11 +174,7 @@ function ReservationsDetails() {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan={5}
-                  >
-                    {error || "No reservation data found"}
-                  </td>
+                  <td colSpan={6}>{error || "No reservation data found"}</td>
                 </tr>
               )}
             </tbody>

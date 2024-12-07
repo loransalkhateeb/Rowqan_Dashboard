@@ -18,6 +18,8 @@ import UpdatEventsOwners from "./Pages/EventsOwnersPages/UpdateEventsOwner";
 import UpdateLandOwner from "./Pages/LandsOwnersPages/UpdateLandOwnerPage";
 import ReservationsDetails from "./Pages/ReservationsDetails";
 import DetailsChaletPage from "./Pages/ChaletsPages/DetailsChaletPage";
+import DetailsEventsPage from "./Pages/EventsPages/DetailsEventsPage";
+import LandsDetails from "./Pages/LandsPages/LandsDetails";
 export const API_URL = "http://localhost:5000"
 
 
@@ -45,6 +47,8 @@ function App() {
           <Route path="/updateventsowners/:id" element={<UpdatEventsOwners/>}   />
           <Route path="/updatelandsowner/:id" element={<UpdateLandOwner/>}   />
           <Route path="/detailsChaletPage/:id" element={<DetailsChaletPage/>}   />
+          <Route path="/detailsEventsPage/:available_event_id" element={<DetailsEventsPage/>}   />
+          <Route path="/landsDetails/:available_land_id" element={<LandsDetails/>}   />
         </Routes>
         </div>
       </div>
