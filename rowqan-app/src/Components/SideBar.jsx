@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../Styles/SideBar.css";
 import userImage from "../Images/user.png";
 import img2 from "../Images/img2.png";
@@ -9,54 +9,75 @@ import img6 from "../Images/img6.png";
 import img7 from "../Images/img7.png";
 import img8 from "../Images/img8.png";
 import img9 from "../Images/img9.png";
-import {Link} from "react-router-dom"
-
-
+import { Link } from "react-router-dom";
 
 function SideBar() {
+
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+
+  const toggleSettings = () => {
+    setSettingsOpen(prevState => !prevState); 
+  };
+
   return (
-    <>
-      <div className="sidebar">
-        <img src={userImage} alt="" />
-        <h4>Super Admin Page</h4>
-        <div className="sidebar-icons">
-          <img src={img2} alt="" />
-          <Link className="p" to={'/dashboard'}>DashBoard</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img3} alt="" />
-          <Link className="p" to={'/users'}>Users</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img4} alt="" />
-          <Link className="p" to={'/chaletsowners'}>Chalets Owners</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img4} alt="" />
-          <Link className="p" to={'/eventsowners'}>Events Owners</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img4} alt="" />
-          <Link className="p" to={'/landsowners'}>Lands Owners</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img4} alt="" />
-          <Link className="p" to={'/reservations'}>Reservations Details</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img6} alt="" />
-          <Link className="p" to={'/messages'}>Messages</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img8} alt="" />
-          <Link className="p" to={'/settings'}>Settings</Link>
-        </div>
-        <div className="sidebar-icons">
-          <img src={img9} alt="" />
-          <Link className="p">Logout</Link>
+    <div className="sidebar">
+      <img src={userImage} alt="User" className="user-image" />
+      <h4 className="sidebar-title">Super Admin Page</h4>
+
+      <div className="sidebar-icons">
+        <img src={img2} alt="" />
+        <Link className="p" to={"/dashboard"}>DashBoard</Link>
+      </div>
+      <div className="sidebar-icons">
+        <img src={img3} alt="" />
+        <Link className="p" to={"/users"}>Users</Link>
+      </div>
+      <div className="sidebar-icons">
+        <img src={img4} alt="" />
+        <Link className="p" to={"/chaletsowners"}>Chalets Owners</Link>
+      </div>
+      <div className="sidebar-icons">
+        <img src={img4} alt="" />
+        <Link className="p" to={"/eventsowners"}>Events Owners</Link>
+      </div>
+      <div className="sidebar-icons">
+        <img src={img4} alt="" />
+        <Link className="p" to={"/landsowners"}>Lands Owners</Link>
+      </div>
+      <div className="sidebar-icons">
+        <img src={img4} alt="" />
+        <Link className="p" to={"/reservations"}>Reservations Details</Link>
+      </div>
+      <div className="sidebar-icons">
+        <img src={img6} alt="" />
+        <Link className="p" to={"/messages"}>Messages</Link>
+      </div>
+
+    
+      <div className="sidebar-icons">
+        <img src={img8} alt="" />
+        <span
+          className="p settings"
+          onClick={toggleSettings} 
+        >
+          Settings
+        </span>
+
+ 
+        <div className={`dropdown ${settingsOpen ? "show" : ""}`}>
+          <Link className="dropdown-item" to="/homesettings">Home Page Settings</Link>
+          <Link className="dropdown-item" to="/chaletsettings">Chalets Settings</Link>
+          <Link className="dropdown-item" to="/eventsettings">Events Settings</Link>
+          <Link className="dropdown-item" to="/landsettings">Lands Settings</Link>
         </div>
       </div>
-    </>
+
+      <div className="sidebar-icons">
+        <img src={img9} alt="" />
+        <Link className="p">Logout</Link>
+      </div>
+    </div>
   );
 }
 
