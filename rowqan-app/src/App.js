@@ -20,7 +20,20 @@ import ReservationsDetails from "./Pages/ReservationsDetails";
 import DetailsChaletPage from "./Pages/ChaletsPages/DetailsChaletPage";
 import DetailsEventsPage from "./Pages/EventsPages/DetailsEventsPage";
 import LandsDetails from "./Pages/LandsPages/LandsDetails";
+import ChaletSettings from "./Pages/ChaletsPages/ChaletSettings";
+import EventSettings from "./Pages/EventsPages/EventSettings";
+import LandSttings from "./Pages/LandsPages/LandSttings";
+import Home from "./Pages/HomePageSettings";
+import UpdateLogo from "./Pages/LogoPages/UpdateLogo";
+import CreateLogo from "./Pages/LogoPages/CreateLogo";
+import AddHeroSection from "./Pages/HerosPages/AddHeroSection";
+import UpdateHeroSections from "./Pages/HerosPages/UpdateHeroSections";
+import CreateHeader from "./Pages/HeadersPage/CreateHeader";
+import UpdateHeader from "./Pages/HeadersPage/UpdateHeader";
 export const API_URL = "http://localhost:5000"
+export const API_IMAGE_URL = "https://res.cloudinary.com/durjqlivi"
+
+
 
 
 function App() {
@@ -49,6 +62,16 @@ function App() {
           <Route path="/detailsChaletPage/:id" element={<DetailsChaletPage/>}   />
           <Route path="/detailsEventsPage/:available_event_id" element={<DetailsEventsPage/>}   />
           <Route path="/landsDetails/:available_land_id" element={<LandsDetails/>}   />
+          <Route path="/chaletsettings" element={<ChaletSettings/>}   />
+          <Route path="/eventsettings" element={<EventSettings/>}   />
+          <Route path="/landsettings" element={<LandSttings/>}   />
+          <Route path="/homesettings" element={<Home/>}   />
+          <Route path="/updatelogo/:id" element={<UpdateLogo/>}   />
+          <Route path="/createlogo" element={<CreateLogo/>}   />
+          <Route path="/addHeroSection" element={<AddHeroSection/>}   />
+          <Route path="/updateHeroSection/:id" element={<UpdateHeroSections/>}   />
+          <Route path="/addHeader" element={<CreateHeader/>}   />
+          <Route path="/updateHeader/:id" element={<UpdateHeader/>}   />
         </Routes>
         </div>
       </div>
