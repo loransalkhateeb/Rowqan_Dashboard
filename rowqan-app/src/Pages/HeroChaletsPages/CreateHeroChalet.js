@@ -3,46 +3,43 @@ import { Button, Form, Col, Row, Container } from "react-bootstrap";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { API_URL1 } from "../../App";
+import { API_URL1 } from "../../App"; 
 
-const AddHeroSection = () => {
+const CreateHeroChalet = () => {
   const navigate = useNavigate();
 
-
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [titleBtn, setTitleBtn] = useState("");
-  const [lang, setLang] = useState("en"); 
+  const [category, setCategory] = useState("For Sale");
+  const [lang, setLang] = useState("en");
   const [image, setImage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("title_btn", titleBtn);
+    formData.append("category", category);
     formData.append("lang", lang);
     formData.append("image", image);
-
+  
+    console.log("Form Data: ", formData);  
+  
     try {
-      const response = await axios.post(`${API_URL1}/heroes/createHero`, formData, {
+      const response = await axios.post(`${API_URL1}/heroChalets/createherochalets`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      if (response.data.message === "Hero created successfully") {
+  
+      if (response.data.message === "Chalets Hero created successfully") {
         Swal.fire({
-          title: "Hero Created Successfully!",
+          title: "Chalet Hero Created Successfully!",
           icon: "success",
           confirmButtonText: "Okay",
         }).then(() => {
-          navigate("/heroes"); 
+          navigate("/heroChalets"); 
         });
       }
     } catch (error) {
-      console.error("Error creating hero:", error);
+      console.error("Error creating chalet hero:", error);
       Swal.fire({
         title: "Error!",
         text: "Something went wrong, please try again.",
@@ -51,21 +48,24 @@ const AddHeroSection = () => {
       });
     }
   };
+  
 
   return (
     <Container className="mt-5">
-      <h2>Add New Hero</h2>
+      <h2>Create New Chalet Hero</h2>
       <Form onSubmit={handleSubmit}>
         <Row className="mb-3">
-          <Form.Group as={Col} md={6} controlId="formTitle">
-            <Form.Label>Title</Form.Label>
+          <Form.Group as={Col} md={6} controlId="formCategory">
+            <Form.Label>Category</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              as="select"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               required
-            />
+            >
+              <option value="For Sale">For Sale</option>
+              <option value="For Rent">For Rent</option>
+            </Form.Control>
           </Form.Group>
 
           <Form.Group as={Col} md={6} controlId="formLang">
@@ -79,33 +79,6 @@ const AddHeroSection = () => {
               <option value="en">English</option>
               <option value="ar">Arabic</option>
             </Form.Control>
-          </Form.Group>
-        </Row>
-
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="formDescription">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="Enter description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </Form.Group>
-        </Row>
-
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="formTitleBtn">
-            <Form.Label>Button Title</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter button title"
-              value={titleBtn}
-              onChange={(e) => setTitleBtn(e.target.value)}
-              required
-            />
           </Form.Group>
         </Row>
 
@@ -127,11 +100,11 @@ const AddHeroSection = () => {
             borderColor: "#6DA6BA",
           }}
         >
-          Create Hero
+          Create Chalet Hero
         </Button>
       </Form>
     </Container>
   );
 };
 
-export default AddHeroSection;
+export default CreateHeroChalet;

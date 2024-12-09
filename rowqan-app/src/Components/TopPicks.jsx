@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../App";
+import { API_URL1 } from "../App";
 
 function TopPicks() {
   const location = useLocation();
@@ -15,7 +15,7 @@ function TopPicks() {
   const gettopPicks = useCallback(async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/services/getAllServicesByServiceStatus/Top Picks/${lang}`
+        `${API_URL1}/services/getAllServicesByServiceStatus/Top Picks/${lang}`
       );
       console.log("first response", res.data);
       settopPicks(res.data);

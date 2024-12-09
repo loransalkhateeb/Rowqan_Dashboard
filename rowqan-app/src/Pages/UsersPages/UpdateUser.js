@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2'; 
-import { API_URL } from '../../App';
+import { API_URL1 } from '../../App';
 
 function UpdateUser() {
   const { id } = useParams(); 
@@ -30,7 +30,7 @@ function UpdateUser() {
 
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/users/getUserById/${id}/${lang}`);
+        const response = await axios.get(`${API_URL1}/users/getUserById/${id}/${lang}`);
         const fetchedUser = response.data.user;
         
 
@@ -51,7 +51,7 @@ function UpdateUser() {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`);
+        const response = await axios.get(`${API_URL1}/userstypes/getAllUsersTypes/${lang}`);
         setRoles(response.data.userTypes);
       } catch (err) {
         console.error('Error fetching roles:', err);
@@ -94,7 +94,7 @@ function UpdateUser() {
     };
 
     try {
-      await axios.put(`${API_URL}/users/UpdateUser/${id}`, updatedUserData);
+      await axios.put(`${API_URL1}/users/UpdateUser/${id}`, updatedUserData);
       setLoading(false);
       Swal.fire({
         title: 'User Updated Successfully!',

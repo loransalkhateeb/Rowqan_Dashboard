@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavBar from "../Components/NavBar";
 import "../Styles/ReservationsDetails.css";
-import { API_URL } from "../App";
+import { API_URL1 } from "../App";
 import { useNavigate } from "react-router-dom";
 
 function ReservationsDetails() {
@@ -26,7 +26,7 @@ function ReservationsDetails() {
   const fetchChaletsReservations = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`
+        `${API_URL1}/ReservationsChalets/getAllReservationChalet/${lang}`
       );
       setReservationData(response.data.reservations);
       setError(""); 
@@ -40,7 +40,7 @@ function ReservationsDetails() {
   const fetchEventsReservations = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/reservationsEvents/getAllreservationevents/${lang}`
+        `${API_URL1}/reservationsEvents/getAllreservationevents/${lang}`
       );
       setReservationData(response.data.reservations);
       setError(""); 
@@ -54,7 +54,7 @@ function ReservationsDetails() {
   const fetchLandsReservations = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/reservationLands/getreservationslands/${lang}`
+        `${API_URL1}/reservationLands/getreservationslands/${lang}`
       );
       setReservationData(response.data.reservations);
       setError(""); 

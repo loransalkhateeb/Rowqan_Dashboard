@@ -61,16 +61,8 @@ function SideBar() {
           className="p settings"
           onClick={toggleSettings} 
         >
-          Settings
+         <Link className="p" to="/homesettings">Settings</Link>
         </span>
-
- 
-        <div className={`dropdown ${settingsOpen ? "show" : ""}`}>
-          <Link className="dropdown-item" to="/homesettings">Home Page Settings</Link>
-          <Link className="dropdown-item" to="/chaletsettings">Chalets Settings</Link>
-          <Link className="dropdown-item" to="/eventsettings">Events Settings</Link>
-          <Link className="dropdown-item" to="/landsettings">Lands Settings</Link>
-        </div>
       </div>
 
       <div className="sidebar-icons">

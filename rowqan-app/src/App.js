@@ -30,7 +30,12 @@ import AddHeroSection from "./Pages/HerosPages/AddHeroSection";
 import UpdateHeroSections from "./Pages/HerosPages/UpdateHeroSections";
 import CreateHeader from "./Pages/HeadersPage/CreateHeader";
 import UpdateHeader from "./Pages/HeadersPage/UpdateHeader";
-export const API_URL = "http://localhost:5000"
+import AddServicePage from "./Pages/ServicesPages/AddServicePage";
+import UpdateService from "./Pages/ServicesPages/UpdateService";
+import CreateHeroChalet from "./Pages/HeroChaletsPages/CreateHeroChalet";
+import UpdateHeroChalet from "./Pages/HeroChaletsPages/UpdateHeroChalet";
+
+export const API_URL1 = "https://rowqanbackend.rowqan.com"
 export const API_IMAGE_URL = "https://res.cloudinary.com/durjqlivi"
 
 
@@ -72,6 +77,12 @@ function App() {
           <Route path="/updateHeroSection/:id" element={<UpdateHeroSections/>}   />
           <Route path="/addHeader" element={<CreateHeader/>}   />
           <Route path="/updateHeader/:id" element={<UpdateHeader/>}   />
+          <Route path="/:header_name/:lang" element={<ChaletSettings/>}   />
+          <Route path="/addService" element={<AddServicePage/>}   />
+          <Route path="/updateservice/:id" element={<UpdateService/>}   />
+          <Route path="/createHeroChalet" element={<CreateHeroChalet/>}   />
+          <Route path="/updateHeroChalet/:id" element={<UpdateHeroChalet/>}   />
+
         </Routes>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../Styles/UsersPage.css";
 import axios from "axios";
@@ -26,7 +26,7 @@ function ChaletsOwnersPage() {
   const fetchOwners = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/userstypes/getAllChaletsOwners/${lang}`
+        `${API_URL1}/userstypes/getAllChaletsOwners/${lang}`
       );
       setOwners(response.data.users);
     } catch (error) {
@@ -51,7 +51,7 @@ function ChaletsOwnersPage() {
 
     if (confirmation.isConfirmed) {
       try {
-        await axios.delete(`${API_URL}/userstypes/DeleteChaletOwner/${id}/${lang}`);
+        await axios.delete(`${API_URL1}/userstypes/DeleteChaletOwner/${id}/${lang}`);
         Swal.fire({
           title: "Deleted!",
           text: "The chalet owner has been deleted.",

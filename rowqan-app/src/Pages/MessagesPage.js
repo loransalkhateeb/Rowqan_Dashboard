@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_URL } from '../App';
+import { API_URL1 } from '../App';
 import '../Styles/MessagesStyle.css';
 
 function MessagesPage() {
@@ -9,7 +9,7 @@ function MessagesPage() {
   useEffect(() => {
 
     axios
-      .get(`${API_URL}/messages/AllMessages`)
+      .get(`${API_URL1}/messages/AllMessages`)
       .then((response) => {
         setMessages(response.data.data);
       })
@@ -23,6 +23,20 @@ function MessagesPage() {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="messages-container scrollbar">
