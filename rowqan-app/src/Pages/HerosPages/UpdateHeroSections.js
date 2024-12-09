@@ -3,7 +3,7 @@ import { Button, Form, Col, Row, Container, Image } from "react-bootstrap";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import { API_IMAGE_URL } from "../../App";
 
 
@@ -22,7 +22,7 @@ const UpdateHeroSections = () => {
  
     const fetchHeroData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/heroes/getHeroById/${id}/${lang}`);
+        const response = await axios.get(`${API_URL1}/heroes/getHeroById/${id}/${lang}`);
         const hero = response.data.hero;
 
         setTitle(hero.title);
@@ -56,7 +56,7 @@ const UpdateHeroSections = () => {
     }
 
     try {
-      const response = await axios.put(`${API_URL}/heroes/updateHero/${id}`, formData, {
+      const response = await axios.put(`${API_URL1}/heroes/updateHero/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

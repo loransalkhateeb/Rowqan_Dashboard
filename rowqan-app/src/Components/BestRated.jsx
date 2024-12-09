@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { API_URL } from "../App";
+import { API_URL1 } from "../App";
 import axios from "axios";
 function BestRated() {
     const location = useLocation()
@@ -13,7 +13,7 @@ function BestRated() {
   const getBestRated = useCallback(async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/services/getAllServicesByServiceStatus/Best Rated/${lang}`
+        `${API_URL1}/services/getAllServicesByServiceStatus/Best Rated/${lang}`
       );
       console.log("first response", res.data);
       setBestRated(res.data);

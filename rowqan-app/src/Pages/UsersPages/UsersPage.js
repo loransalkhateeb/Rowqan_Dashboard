@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../Styles/UsersPage.css";
 import axios from "axios";
@@ -23,7 +23,7 @@ function UsersPage() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/users/getAllUsers/${lang}`)
+      .get(`${API_URL1}/users/getAllUsers/${lang}`)
       .then((response) => {
         setUsers(response.data.users);
         console.log(response.data);
@@ -48,7 +48,7 @@ function UsersPage() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`${API_URL}/users/DeleteUser/${userId}/${lang}`)
+          .delete(`${API_URL1}/users/DeleteUser/${userId}/${lang}`)
           .then((response) => {
             Swal.fire({
               title: "Deleted!",

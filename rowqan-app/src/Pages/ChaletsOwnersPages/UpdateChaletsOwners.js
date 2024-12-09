@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 
 function UpdateChaletsOwners() {
   const { id } = useParams(); 
@@ -30,7 +30,7 @@ function UpdateChaletsOwners() {
     const fetchOwnerData = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/userstypes/getChaletOwnerById/${id}/${lang}`
+          `${API_URL1}/userstypes/getChaletOwnerById/${id}/${lang}`
         );
         const { name, email, phone_number, country, user_type_id } =
           response.data.user;
@@ -51,7 +51,7 @@ function UpdateChaletsOwners() {
     const fetchRoles = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/userstypes/getAllUsersTypes/${lang}`
+          `${API_URL1}/userstypes/getAllUsersTypes/${lang}`
         );
         setRoles(response.data.userTypes);
       } catch (err) {
@@ -96,7 +96,7 @@ function UpdateChaletsOwners() {
 
     try {
       await axios.put(
-        `${API_URL}/userstypes/UpdateChaletsOwner/${id}`,
+        `${API_URL1}/userstypes/UpdateChaletsOwner/${id}`,
         updatedOwnerData
       );
       setLoading(false);

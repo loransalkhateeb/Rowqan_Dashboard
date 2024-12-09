@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import Swal from "sweetalert2";
 function CreateUserPage() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ function CreateUserPage() {
     const fetchRoles = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/userstypes/getAllUsersTypes/${lang}`
+          `${API_URL1}/userstypes/getAllUsersTypes/${lang}`
         );
         setRoles(response.data.userTypes);
       } catch (err) {
@@ -70,7 +70,7 @@ function CreateUserPage() {
 
     try {
       await axios
-        .post(`${API_URL}/users/createUser`, userData)
+        .post(`${API_URL1}/users/createUser`, userData)
         .then((response) => {
           Swal.fire({
             title: "User Created Successfully!",

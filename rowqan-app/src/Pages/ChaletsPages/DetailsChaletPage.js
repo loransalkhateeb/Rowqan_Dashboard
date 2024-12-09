@@ -3,7 +3,7 @@ import axios from "axios";
 import NavBar from "../../Components/NavBar";
 import "../../Styles/ChaletsDetailStyle.css";
 import { useParams } from "react-router-dom";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -26,7 +26,7 @@ function DetailsChaletPage() {
     const fetchChaletImages = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/chaletsimages/chaletgetChaletImage/${id}`
+          `${API_URL1}/chaletsimages/chaletgetChaletImage/${id}`
         );
         setChaletImages(response.data.images || []);
       } catch (error) {
@@ -38,7 +38,7 @@ function DetailsChaletPage() {
     const fetchChaletDetails = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/ReservationsChalets/reservationsByChaletId/${id}/ar`
+          `${API_URL1}/ReservationsChalets/reservationsByChaletId/${id}/ar`
         );
         setChaletDetails(response.data.reservations || []);
       } catch (error) {
@@ -50,7 +50,7 @@ function DetailsChaletPage() {
     const fetchReservationDates = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/ReservationsChalets/getAllReservationChaletById/${id}/en`
+          `${API_URL1}/ReservationsChalets/getAllReservationChaletById/${id}/en`
         );
 
         const dates = response.data.reservation
@@ -70,7 +70,7 @@ function DetailsChaletPage() {
     const fetchAdditionalChaletDetails = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/chaletsdetails/getChaletDetailsByChaletId/${id}/en`
+          `${API_URL1}/chaletsdetails/getChaletDetailsByChaletId/${id}/en`
         );
         setAdditionalChaletDetails(response.data.chaletDetails || []);
       } catch (error) {

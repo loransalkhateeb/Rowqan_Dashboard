@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; 
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 
 function CreateLogo() {
   const [newLogo, setNewLogo] = useState(null);
@@ -31,7 +31,7 @@ function CreateLogo() {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/logos/createlogo`, {
+      const response = await fetch(`${API_URL1}/logos/createlogo`, {
         method: "POST",
         body: formData,
       });

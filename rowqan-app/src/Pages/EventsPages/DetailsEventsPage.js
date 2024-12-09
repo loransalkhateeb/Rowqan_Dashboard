@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavBar from "../../Components/NavBar";
 import { useParams } from "react-router-dom";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -25,7 +25,7 @@ function DetailsEventsPage() {
     const fetchEventImages = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/availableimages/getavailableimage/${available_event_id}`
+          `${API_URL1}/availableimages/getavailableimage/${available_event_id}`
         );
       
         const images = response.data.images.map(image => ({
@@ -42,7 +42,7 @@ function DetailsEventsPage() {
     const fetchEventDetails = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/reservationsEvents/getAllreservationeventsByAvailableId/${available_event_id}/en`
+          `${API_URL1}/reservationsEvents/getAllreservationeventsByAvailableId/${available_event_id}/en`
         );
         setEventDetails(response.data.reservations || []);
       } catch (error) {
@@ -54,7 +54,7 @@ function DetailsEventsPage() {
     const fetchReservationDates = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/reservationsEvents/getAllreservationeventsByAvailableId/${available_event_id}/en`
+          `${API_URL1}/reservationsEvents/getAllreservationeventsByAvailableId/${available_event_id}/en`
         );
        
         const dates = response.data.reservations.map((reservation) => {

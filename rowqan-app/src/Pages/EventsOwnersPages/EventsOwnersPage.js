@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../Styles/UsersPage.css";
 import axios from "axios";
@@ -25,7 +25,7 @@ function EventsOwnersPage() {
   const fetchOwners = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/userstypes/getAllEventsOwners/${lang}`
+        `${API_URL1}/userstypes/getAllEventsOwners/${lang}`
       );
       setOwners(response.data.users);
     } catch (error) {
@@ -50,7 +50,7 @@ function EventsOwnersPage() {
 
     if (confirmation.isConfirmed) {
       try {
-        await axios.delete(`${API_URL}/userstypes/DeleteEventOwner/${id}/${lang}`);
+        await axios.delete(`${API_URL1}/userstypes/DeleteEventOwner/${id}/${lang}`);
         Swal.fire({
           title: "Deleted!",
           text: "The Event owner has been deleted.",

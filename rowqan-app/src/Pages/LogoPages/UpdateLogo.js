@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Image from "react-bootstrap/Image";
-import { API_URL } from "../../App";
+import { API_URL1 } from "../../App";
 import Swal from "sweetalert2";
 function UpdateLogo() {
   const { id } = useParams();
@@ -14,7 +14,7 @@ function UpdateLogo() {
   useEffect(() => {
     const fetchLogo = async () => {
       try {
-        const response = await fetch(`${API_URL}/logos/getlogobyid/${id}`);
+        const response = await fetch(`${API_URL1}/logos/getlogobyid/${id}`);
         const data = await response.json();
         setLogo(data);
         setLoading(false);
@@ -46,7 +46,7 @@ function UpdateLogo() {
 
     try {
       console.log("Sending request to update logo...");
-      const response = await fetch(`${API_URL}/logos/updatelogo/${id}`, {
+      const response = await fetch(`${API_URL1}/logos/updatelogo/${id}`, {
         method: "PUT",
         body: formData,
       });

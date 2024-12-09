@@ -1,51 +1,75 @@
-import React, { useState } from "react";
-import { Button, Form, Col, Row, Container } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Col, Row, Container, Image } from "react-bootstrap";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { API_URL1 } from "../../App";
+import { API_IMAGE_URL } from "../../App";
 
-const AddHeroSection = () => {
+const UpdateService = () => {
   const navigate = useNavigate();
-
-
+  const { id } = useParams();
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [titleBtn, setTitleBtn] = useState("");
-  const [lang, setLang] = useState("en"); 
+  const [statusService, setStatusService] = useState("");
+  const [lang, setLang] = useState("en");
   const [image, setImage] = useState(null);
+  const [currentImage, setCurrentImage] = useState("");
+
+  useEffect(() => {
+    const fetchServiceData = async () => {
+      try {
+        const response = await axios.get(`${API_URL1}/services/getservicebyid/${id}/${lang}`);
+        const service = response.data.service;
+
+        setTitle(service.title);
+        setStatusService(service.status_service);
+        setLang(service.lang);
+        setCurrentImage(service.image);
+      } catch (error) {
+        console.error("Error fetching service data:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Could not load service data. Please try again.",
+          icon: "error",
+          confirmButtonText: "Close",
+        });
+      }
+    };
+
+    fetchServiceData();
+  }, [id, lang]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("description", description);
-    formData.append("title_btn", titleBtn);
+    formData.append("status_service", statusService);
     formData.append("lang", lang);
-    formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    }
 
     try {
-      const response = await axios.post(`${API_URL1}/heroes/createHero`, formData, {
+      const response = await axios.put(`${API_URL1}/services/updateService/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      if (response.data.message === "Hero created successfully") {
+      if (response.data.message === "Service updated successfully") {
         Swal.fire({
-          title: "Hero Created Successfully!",
+          title: "Service Updated Successfully!",
           icon: "success",
           confirmButtonText: "Okay",
         }).then(() => {
-          navigate("/heroes"); 
+          navigate("/services");
         });
       }
     } catch (error) {
-      console.error("Error creating hero:", error);
+      console.error("Error updating service:", error);
       Swal.fire({
         title: "Error!",
-        text: "Something went wrong, please try again.",
+        text: "Something went wrong. Please try again.",
         icon: "error",
         confirmButtonText: "Close",
       });
@@ -54,7 +78,7 @@ const AddHeroSection = () => {
 
   return (
     <Container className="mt-5">
-      <h2>Add New Hero</h2>
+      <h2>Update Service</h2>
       <Form onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group as={Col} md={6} controlId="formTitle">
@@ -83,27 +107,13 @@ const AddHeroSection = () => {
         </Row>
 
         <Row className="mb-3">
-          <Form.Group as={Col} controlId="formDescription">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="Enter description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </Form.Group>
-        </Row>
-
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="formTitleBtn">
-            <Form.Label>Button Title</Form.Label>
+          <Form.Group as={Col} controlId="formStatusService">
+            <Form.Label>Status</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter button title"
-              value={titleBtn}
-              onChange={(e) => setTitleBtn(e.target.value)}
+              placeholder="Enter service status"
+              value={statusService}
+              onChange={(e) => setStatusService(e.target.value)}
               required
             />
           </Form.Group>
@@ -112,10 +122,19 @@ const AddHeroSection = () => {
         <Row className="mb-3">
           <Form.Group as={Col} controlId="formImage">
             <Form.Label>Image</Form.Label>
+            {currentImage && (
+              <div className="mb-3">
+                <Image 
+                  style={{ width: '250px' }}
+                  src={`${API_IMAGE_URL}/${currentImage}`}
+                  alt="Current Service"
+                  className="img-fluid"
+                />
+              </div>
+            )}
             <Form.Control
               type="file"
               onChange={(e) => setImage(e.target.files[0])}
-              required
             />
           </Form.Group>
         </Row>
@@ -126,12 +145,13 @@ const AddHeroSection = () => {
             backgroundColor: "#6DA6BA", 
             borderColor: "#6DA6BA",
           }}
+          className="w-100"
         >
-          Create Hero
+          Update Service
         </Button>
       </Form>
     </Container>
   );
 };
 
-export default AddHeroSection;
+export default UpdateService;

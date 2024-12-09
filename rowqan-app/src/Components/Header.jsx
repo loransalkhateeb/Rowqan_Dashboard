@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Row, Col, Button } from "react-bootstrap";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import Image from "react-bootstrap/Image";
-import { API_URL } from "../App";
+import { API_URL1 } from "../App";
 import Swal from "sweetalert2";
 
 const Header = () => {
@@ -28,7 +28,7 @@ const Header = () => {
   useEffect(() => {
     const fetchLogo = async () => {
       try {
-        const response = await fetch(`${API_URL}/logos/getalllogos`);
+        const response = await fetch(`${API_URL1}/logos/getalllogos`);
         const data = await response.json();
         if (data && data.length > 0) {
           setLogo(data[0]);
@@ -95,7 +95,7 @@ const Header = () => {
 
         if (result.isConfirmed) {
           const response = await fetch(
-            `${API_URL}/logos/deletelogo/${logo.id}`,
+            `${API_URL1}/logos/deletelogo/${logo.id}`,
             {
               method: "DELETE",
             }
