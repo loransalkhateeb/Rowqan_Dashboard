@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2'; 
@@ -24,44 +24,48 @@ function UpdateUser() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+
+  const fetchUserData = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API_URL1}/users/getUserById/${id}/${lang}`);
+      console.log("API Response:", response.data); 
+    
+      const fetchedUser = response.data; 
+      setUserData({
+        name: fetchedUser.name || "",
+        email: fetchedUser.email || "",
+        phone: fetchedUser.phone_number || "",
+        country: fetchedUser.country || "",
+        password: fetchedUser.password || "",
+        user_role: fetchedUser.user_type_id || "", 
+      });
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      setError("Error fetching user data.");
+    }
+  }, [id, lang]);
+
+ const fetchRoles = useCallback(async () => {
+    setError("");  
+    try {
+      const response = await axios.get(`${API_URL1}/userstypes/getAllUsersTypes/${lang}`);
+      console.log("API Response:", response.data);
+      if (Array.isArray(response.data)) {
+        setRoles(response.data); 
+      } else {
+        setError("Error: Roles data is not in the expected format.");
+      }
+    } catch (err) {
+      setError("Error fetching roles.");
+      console.error("Error:", err);
+    }
+  }, [lang]); 
 
   useEffect(() => {
-
-
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`${API_URL1}/users/getUserById/${id}/${lang}`);
-        const fetchedUser = response.data.user;
-        
-
-        setUserData({
-          name: fetchedUser.name,
-          email: fetchedUser.email,
-          phone: fetchedUser.phone_number,
-          country: fetchedUser.country,
-          password: fetchedUser.password,
-          user_role: fetchedUser.user_type_id, 
-        });
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Error fetching user data.');
-      }
-    };
-
-
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get(`${API_URL1}/userstypes/getAllUsersTypes/${lang}`);
-        setRoles(response.data.userTypes);
-      } catch (err) {
-        console.error('Error fetching roles:', err);
-        setError('Error fetching roles.');
-      }
-    };
-
     fetchUserData();
     fetchRoles();
-  }, [id, lang]);
+  }, [fetchUserData, fetchRoles]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -203,7 +207,7 @@ function UpdateUser() {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="create-btn" disabled={loading}>
           {loading ? 'Updating...' : 'Update User'}
         </button>
       </form>

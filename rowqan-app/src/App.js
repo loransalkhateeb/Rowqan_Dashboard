@@ -13,7 +13,6 @@ import SettingsPage from "../src/Pages/SettingsPage";
 import CreateUsers  from '../src/Pages/UsersPages/CreateUserPage'
 import UpdateUser from "./Pages/UsersPages/UpdateUser";
 import UpdateChaletsOwners from "./Pages/ChaletsOwnersPages/UpdateChaletsOwners";
-import UpdateEventsOwner from "./Pages/EventsOwnersPages/UpdateEventsOwner";
 import UpdatEventsOwners from "./Pages/EventsOwnersPages/UpdateEventsOwner";
 import UpdateLandOwner from "./Pages/LandsOwnersPages/UpdateLandOwnerPage";
 import ReservationsDetails from "./Pages/ReservationsDetails";
@@ -35,7 +34,7 @@ import UpdateService from "./Pages/ServicesPages/UpdateService";
 import CreateHeroChalet from "./Pages/HeroChaletsPages/CreateHeroChalet";
 import UpdateHeroChalet from "./Pages/HeroChaletsPages/UpdateHeroChalet";
 
-export const API_URL1 = "https://rowqanbackend.rowqan.com"
+export const API_URL1 = "http://localhost:5000"
 export const API_IMAGE_URL = "https://res.cloudinary.com/durjqlivi"
 
 
