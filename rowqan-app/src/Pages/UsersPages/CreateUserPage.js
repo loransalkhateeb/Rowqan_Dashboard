@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL1 } from "../../App";
 import Swal from "sweetalert2";
+
 function CreateUserPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const lang =
-    location.pathname.split("/")[1] === "ar" ||
-    location.pathname.split("/")[1] === "en"
-      ? location.pathname.split("/")[1]
-      : "en";
+  const lang = location.pathname.split("/")[1] === "ar" || location.pathname.split("/")[1] === "en" 
+                ? location.pathname.split("/")[1] 
+                : "en";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,21 +23,26 @@ function CreateUserPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL1}/userstypes/getAllUsersTypes/${lang}`
-        );
-        setRoles(response.data.userTypes);
-      } catch (err) {
-        setError("Error fetching roles.");
-        console.error(err);
+ 
+  const fetchRoles = useCallback(async () => {
+    setError("");  
+    try {
+      const response = await axios.get(`${API_URL1}/userstypes/getAllUsersTypes/${lang}`);
+      console.log("API Response:", response.data);
+      if (Array.isArray(response.data)) {
+        setRoles(response.data); 
+      } else {
+        setError("Error: Roles data is not in the expected format.");
       }
-    };
+    } catch (err) {
+      setError("Error fetching roles.");
+      console.error("Error:", err);
+    }
+  }, [lang]); 
 
+  useEffect(() => {
     fetchRoles();
-  }, []);
+  }, [fetchRoles]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +57,7 @@ function CreateUserPage() {
     setLoading(true);
     setError("");
     const { name, email, phone, country, password, user_role } = formData;
+
     if (!name || !email || !phone || !country || !password || !user_role) {
       setError("Please fill all the fields.");
       setLoading(false);
@@ -64,23 +70,19 @@ function CreateUserPage() {
       phone_number: phone,
       country,
       password,
-      lang: lang,
+      lang,
       user_type_id: user_role,
     };
 
     try {
-      await axios
-        .post(`${API_URL1}/users/createUser`, userData)
-        .then((response) => {
-          Swal.fire({
-            title: "User Created Successfully!",
-            icon: "success",
-            confirmButtonText: "Okay",
-          }).then((response) => {
-            navigate("/users");
-          });
-        });
-      navigate("/users");
+      await axios.post(`${API_URL1}/users/createUser`, userData);
+      Swal.fire({
+        title: "User Created Successfully!",
+        icon: "success",
+        confirmButtonText: "Okay",
+      }).then(() => {
+        navigate("/users");
+      });
     } catch (err) {
       setError("Error creating user.");
       console.error(err);
@@ -182,7 +184,7 @@ function CreateUserPage() {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="create-btn" disabled={loading}>
           {loading ? "Creating..." : "Create User"}
         </button>
       </form>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { API_URL1 } from "../../App";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../Styles/UsersPage.css";
@@ -17,63 +17,78 @@ function UsersPage() {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = useCallback((event) => {
     setSearchTerm(event.target.value);
-  };
+  }, []);
+
 
   useEffect(() => {
-    axios
-      .get(`${API_URL1}/users/getAllUsers/${lang}`)
-      .then((response) => {
-        setUsers(response.data.users);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(`Error Fetching the data: ${error}`);
-      });
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${API_URL1}/users/getAllUsers/${lang}`);
+        if (response.data) {
+          setUsers(response.data);
+        } else {
+          console.error("No users found in response.");
+        }
+      } catch (error) {
+        console.error(`Error fetching the data: ${error}`);
+      }
+    };
+
+    fetchUsers();
   }, [lang]);
 
-  const handleUserCreate = () => {
-    navigate("/users/createuser");
-  };
 
-  const handleDelete = (userId) => {
-    Swal.fire({
-      title: "Are you sure you want to delete this user?",
-      text: "This action cannot be undone!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .delete(`${API_URL1}/users/DeleteUser/${userId}/${lang}`)
-          .then((response) => {
-            Swal.fire({
-              title: "Deleted!",
-              text: "User has been deleted.",
-              icon: "success",
+  const handleDelete = useCallback(
+    (userId) => {
+      Swal.fire({
+        title: "Are you sure you want to delete this user?",
+        text: "This action cannot be undone!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`${API_URL1}/users/DeleteUser/${userId}/${lang}`)
+            .then(() => {
+              Swal.fire({
+                title: "Deleted!",
+                text: "User has been deleted.",
+                icon: "success",
+              });
+              setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+            })
+            .catch((error) => {
+              Swal.fire({
+                title: "Error!",
+                text: "There was an error deleting the user.",
+                icon: "error",
+              });
+              console.error(error);
             });
-            setUsers(users.filter((user) => user.id !== userId));
-          })
-          .catch((error) => {
-            Swal.fire({
-              title: "Error!",
-              text: "There was an error deleting the user.",
-              icon: "error",
-            });
-            console.error(error);
-          });
-      }
-    });
-  };
+        }
+      });
+    },
+    [lang]
+  );
 
-  const getRoleBackgroundColor = (role) => {
+ 
+  const filteredUsers = useMemo(
+    () =>
+      users.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [users, searchTerm]
+  );
+
+  const getRoleBackgroundColor = useCallback((role) => {
     switch (role) {
-      case "Super_Admin_User":
+      case "admin":
         return "#6DA6BA";
-      case "End_User":
+      case "user":
         return "#6DA6DB";
       case "Owner_User":
         return "#F2C79D";
@@ -88,77 +103,74 @@ function UsersPage() {
       default:
         return "#ffffff";
     }
-  };
+  }, []);
 
   return (
     <div className="container">
-      <h1>Hello User</h1>
-      <p>Have a Nice Day</p>
+      <h1>Users Management</h1>
+      <p>Manage all users from here</p>
       <div className="search-container">
         <input
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          placeholder="Search The User..."
+          placeholder="Search for a user..."
           className="search-input"
         />
-        <button className="create-btn" onClick={handleUserCreate}>
+        <button className="create-btn" onClick={() => navigate("/users/createuser")}>
           Create User
         </button>
       </div>
       <div className="list-owners">
-        <h3>List Of Owners</h3>
-
+        <h3>List of Users</h3>
         <table className="owners-table">
           <thead>
             <tr>
               <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
               <th>Role</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(users) && users.length > 0 ? (
-              users
-                .filter((user) =>
-                  user.name.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.name}</td>
-                    <td
-                      style={{
-                        width: "25px",
-                        backgroundColor:
-                          user.Users_Type && user.Users_Type.type
-                            ? getRoleBackgroundColor(user.Users_Type.type)
-                            : "#ffffff",
-                        color: "#fff",
-                      }}
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.phone_number}</td>
+                  <td
+                    style={{
+                      width: "25px",
+                      backgroundColor:
+                        user.Users_Type?.type
+                          ? getRoleBackgroundColor(user.Users_Type.type)
+                          : "#ffffff",
+                      color: "#fff",
+                    }}
+                  >
+                    {user.Users_Type?.type || "No Role"}
+                  </td>
+                  <td>
+                    <button
+                      className="action-btn edit-btn"
+                      onClick={() => navigate(`/updateuser/${user.id}`)}
                     >
-                      {user.Users_Type ? user.Users_Type.type : "No Role"}
-                    </td>
-                    <td>
-                      <button
-                        className="action-btn edit-btn"
-                        onClick={() => {
-                          navigate(`/updateuser/${user.id}`);
-                        }}
-                      >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button
-                        className="action-btn delete-btn"
-                        onClick={() => handleDelete(user.id)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                      <i className="fas fa-edit"></i>
+                    </button>
+                    <button
+                      className="action-btn delete-btn"
+                      onClick={() => handleDelete(user.id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))
             ) : (
               <tr>
-                <td colSpan="3">No users found</td>
+                <td colSpan="5">No users found</td>
               </tr>
             )}
           </tbody>
@@ -168,4 +180,4 @@ function UsersPage() {
   );
 }
 
-export default UsersPage;
+export default React.memo(UsersPage);

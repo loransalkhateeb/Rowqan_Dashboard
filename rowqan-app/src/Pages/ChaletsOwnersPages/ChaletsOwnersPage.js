@@ -17,18 +17,25 @@ function ChaletsOwnersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [owners, setOwners] = useState([]);
   const [error, setError] = useState("");
-
+  const [isDeleting, setIsDeleting] = useState(false); 
   useEffect(() => {
     fetchOwners();
   }, [lang]);
 
-  
   const fetchOwners = async () => {
     try {
       const response = await axios.get(
         `${API_URL1}/userstypes/getAllChaletsOwners/${lang}`
       );
-      setOwners(response.data.users);
+   
+      console.log("Fetched Data:", response.data);
+     
+      if (response.data && response.data.users) {
+        setOwners(response.data.users);
+      } else {
+        setError("No chalet owners found in the response.");
+        setOwners([]);
+      }
     } catch (error) {
       console.error("Error fetching chalet owners:", error);
       setError("Error fetching chalet owners.");
@@ -49,8 +56,10 @@ function ChaletsOwnersPage() {
       cancelButtonText: "No, cancel!",
     });
 
+
     if (confirmation.isConfirmed) {
       try {
+        setIsDeleting(true); 
         await axios.delete(`${API_URL1}/userstypes/DeleteChaletOwner/${id}/${lang}`);
         Swal.fire({
           title: "Deleted!",
@@ -65,6 +74,8 @@ function ChaletsOwnersPage() {
           text: "Failed to delete the chalet owner.",
           icon: "error",
         });
+      } finally {
+        setIsDeleting(false); 
       }
     }
   };
@@ -92,68 +103,66 @@ function ChaletsOwnersPage() {
         />
       </div>
       <div className="list-owners">
-  <h3>List of Chalet Owners</h3>
+        <h3>List of Chalet Owners</h3>
 
-  <table className="owners-table" style={{ tableLayout: 'fixed', width: '100%' }}>
-    <thead>
-      <tr>
-        <th style={{ width: '150px' }}>Name</th>
-        <th style={{ width: '200px' }}>Email</th>
-        <th style={{ width: '150px' }}>Phone</th>
-        <th style={{ width: '150px' }}>Country</th>
-        <th style={{ width: '120px' }}>Role</th> 
-        <th style={{ width: '120px' }}>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {owners.length > 0 ? (
-        owners
-          .filter((owner) =>
-            owner.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((owner) => (
-            <tr key={owner.id}>
-              <td>{owner.name}</td>
-              <td>{owner.email}</td>
-              <td>{owner.phone_number}</td>
-              <td>{owner.country}</td>
-              <td
-                style={{
-                  width: '120px', 
-                  backgroundColor:
-                    owner.Users_Type && owner.Users_Type.type
-                      ? getRoleBackgroundColor(owner.Users_Type.type)
-                      : "#ffffff",
-                  color: "#fff",
-                }}
-              >
-                {owner.Users_Type ? owner.Users_Type.type : "No Role"}
-              </td>
-              <td>
-                <button
-                  className="action-btn edit-btn"
-                  onClick={() => navigate(`/updatechaletsowners/${owner.id}`)}
-                >
-                  <i className="fas fa-edit"></i>
-                </button>
-                <button
-                  className="action-btn delete-btn"
-                  onClick={() => handleDelete(owner.id)}
-                >
-                  <i className="fas fa-trash"></i>
-                </button>
-              </td>
+        <table className="owners-table" style={{ tableLayout: "fixed", width: "100%" }}>
+          <thead>
+            <tr>
+              <th style={{ width: "150px" }}>Name</th>
+              <th style={{ width: "200px" }}>Email</th>
+              <th style={{ width: "150px" }}>Phone</th>
+              <th style={{ width: "150px" }}>Country</th>
+              <th style={{ width: "120px" }}>Role</th>
+              <th style={{ width: "120px" }}>Action</th>
             </tr>
-          ))
-      ) : (
-        <tr>
-          <td colSpan="6">{error || "No chalet owners found"}</td>
-        </tr>
-      )}
-    </tbody>
-  </table>
-</div>
-
+          </thead>
+          <tbody>
+            {owners.length > 0 ? (
+              owners
+                .filter((owner) =>
+                  owner.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((owner) => (
+                  <tr key={owner.id}>
+                    <td>{owner.name}</td>
+                    <td>{owner.email}</td>
+                    <td>{owner.phone_number}</td>
+                    <td>{owner.country}</td>
+                    <td
+                      style={{
+                        backgroundColor: owner.Users_Type
+                          ? getRoleBackgroundColor(owner.Users_Type.type)
+                          : "#ffffff",
+                        color: "#fff",
+                      }}
+                    >
+                      {owner.Users_Type ? owner.Users_Type.type : "No Role"}
+                    </td>
+                    <td>
+                      <button
+                        className="action-btn edit-btn"
+                        onClick={() => navigate(`/updatechaletsowners/${owner.id}`)}
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
+                      <button
+                        className="action-btn delete-btn"
+                        onClick={() => handleDelete(owner.id)}
+                        disabled={isDeleting} 
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            ) : (
+              <tr>
+                <td colSpan="6">{error || "No chalet owners found"}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
