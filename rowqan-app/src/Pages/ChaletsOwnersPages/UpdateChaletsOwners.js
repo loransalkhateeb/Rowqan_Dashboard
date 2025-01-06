@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { API_URL1 } from "../../App";
 
 function UpdateChaletsOwners() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -26,44 +26,51 @@ function UpdateChaletsOwners() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchOwnerData = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL1}/userstypes/getChaletOwnerById/${id}/${lang}`
-        );
-        const { name, email, phone_number, country, user_type_id } =
-          response.data.user;
-        setOwnerData({
-          name,
-          email,
-          phone: phone_number,
-          country,
-          password: "", 
-          user_role: user_type_id,
-        });
-      } catch (err) {
-        console.error("Error fetching chalet owner data:", err);
-        setError("Error fetching chalet owner data.");
-      }
-    };
-
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL1}/userstypes/getAllUsersTypes/${lang}`
-        );
-        setRoles(response.data.userTypes);
-      } catch (err) {
-        console.error("Error fetching roles:", err);
-        setError("Error fetching roles.");
-      }
-    };
-
-    fetchOwnerData();
-    fetchRoles();
+  // Fetch owner data
+  const fetchOwnerData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL1}/userstypes/getChaletOwnerById/${id}/${lang}`
+      );
+      const { name, email, phone_number, country, user_type_id } = response.data;
+      setOwnerData({
+        name,
+        email,
+        phone: phone_number,
+        country,
+        password: "",
+        user_role: user_type_id,
+      });
+    } catch (err) {
+      console.error("Error fetching chalet owner data:", err);
+      setError("Error fetching chalet owner data.");
+    }
   }, [id, lang]);
 
+  // Fetch roles
+  const fetchRoles = useCallback(async () => {
+    setError("");
+    try {
+      const response = await axios.get(
+        `${API_URL1}/userstypes/getAllUsersTypes/${lang}`
+      );
+      if (Array.isArray(response.data)) {
+        setRoles(response.data);
+      } else {
+        setError("Error: Roles data is not in the expected format.");
+      }
+    } catch (err) {
+      setError("Error fetching roles.");
+      console.error("Error:", err);
+    }
+  }, [lang]);
+
+  useEffect(() => {
+    fetchOwnerData();
+    fetchRoles();
+  }, [fetchOwnerData, fetchRoles]);
+
+  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setOwnerData((prevData) => ({
@@ -72,6 +79,7 @@ function UpdateChaletsOwners() {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -89,7 +97,7 @@ function UpdateChaletsOwners() {
       email,
       phone_number: phone,
       country,
-      password: password || undefined, 
+      password: password || undefined,
       lang,
       user_type_id: user_role,
     };
@@ -209,7 +217,7 @@ function UpdateChaletsOwners() {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="create-btn" disabled={loading}>
           {loading ? "Updating..." : "Update Chalet Owner"}
         </button>
       </form>

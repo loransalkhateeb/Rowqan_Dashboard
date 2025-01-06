@@ -21,9 +21,9 @@
   }
   
   .icon-button {
-    background-color: transparent; /* خلفية شفافة */
-    border: none; /* إزالة الحدود */
-    color: black; /* اللون الأسود للأيقونات */
+    background-color: transparent; 
+    border: none;
+    color: black; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,7 +32,7 @@
   }
   
   .icon-button:hover {
-    color: #6DA6DB; /* تغيير اللون عند التمرير على الأيقونة */
+    color: #6DA6DB; 
   }
   
   .maintext_home {

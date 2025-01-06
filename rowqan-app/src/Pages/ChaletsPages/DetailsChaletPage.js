@@ -40,7 +40,7 @@ function DetailsChaletPage() {
         const response = await axios.get(
           `${API_URL1}/ReservationsChalets/reservationsByChaletId/${id}/ar`
         );
-        setChaletDetails(response.data.reservations || []);
+        setChaletDetails(response.data|| []);
       } catch (error) {
         console.error("Error fetching chalet details:", error);
         setError("Failed to fetch chalet details.");
