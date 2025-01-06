@@ -27,10 +27,14 @@ function ChaletsOwnersPage() {
       const response = await axios.get(
         `${API_URL1}/userstypes/getAllChaletsOwners/${lang}`
       );
-   
-      console.log("Fetched Data:", response.data);
      
-      if (response.data && response.data.users) {
+      console.log("Fetched Data:", response.data); 
+      
+     
+      if (response.data && Array.isArray(response.data)) {
+        setOwners(response.data);
+      } else if (response.data && response.data.users) {
+        
         setOwners(response.data.users);
       } else {
         setError("No chalet owners found in the response.");
@@ -41,6 +45,8 @@ function ChaletsOwnersPage() {
       setError("Error fetching chalet owners.");
     }
   };
+  
+  
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -117,7 +123,7 @@ function ChaletsOwnersPage() {
             </tr>
           </thead>
           <tbody>
-            {owners.length > 0 ? (
+            {Array.isArray(owners) && owners.length > 0 ? (
               owners
                 .filter((owner) =>
                   owner.name.toLowerCase().includes(searchTerm.toLowerCase())

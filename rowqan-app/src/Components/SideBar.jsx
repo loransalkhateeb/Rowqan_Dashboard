@@ -37,21 +37,17 @@ function SideBar() {
         <img src={img4} alt="" />
         <Link className="p" to={"/chaletsowners"}>Chalets Owners</Link>
       </div>
-      <div className="sidebar-icons">
+      {/* <div className="sidebar-icons">
         <img src={img4} alt="" />
         <Link className="p" to={"/eventsowners"}>Events Owners</Link>
       </div>
       <div className="sidebar-icons">
         <img src={img4} alt="" />
         <Link className="p" to={"/landsowners"}>Lands Owners</Link>
-      </div>
+      </div> */}
       <div className="sidebar-icons">
         <img src={img4} alt="" />
         <Link className="p" to={"/reservations"}>Reservations Details</Link>
-      </div>
-      <div className="sidebar-icons">
-        <img src={img6} alt="" />
-        <Link className="p" to={"/messages"}>Messages</Link>
       </div>
 
     

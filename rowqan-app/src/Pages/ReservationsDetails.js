@@ -9,74 +9,35 @@ function ReservationsDetails() {
   const navigate = useNavigate();
   const [reservationData, setReservationData] = useState([]);
   const [error, setError] = useState("");
-  const [selectedType, setSelectedType] = useState("");
 
   const lang = "en";
 
   useEffect(() => {
-    if (selectedType === "chalets") {
-      fetchChaletsReservations();
-    } else if (selectedType === "events") {
-      fetchEventsReservations();
-    } else if (selectedType === "lands") {
-      fetchLandsReservations();
-    }
-  }, [selectedType]);
+    fetchChaletsReservations();
+  }, []);
 
   const fetchChaletsReservations = async () => {
     try {
       const response = await axios.get(
         `${API_URL1}/ReservationsChalets/getAllReservationChalet/${lang}`
       );
-      setReservationData(response.data.reservations);
-      setError(""); 
+      console.log("Chalet reservations response:", response.data);
+      if (response.data && response.data) {
+        setReservationData(response.data);
+        setError("");
+      } else {
+        setReservationData([]);
+        setError("No reservation data found");
+      }
     } catch (error) {
       console.error("Error fetching chalet reservations:", error);
       setError("Error fetching chalet reservations.");
-      setReservationData([]); 
+      setReservationData([]);
     }
-  };
-
-  const fetchEventsReservations = async () => {
-    try {
-      const response = await axios.get(
-        `${API_URL1}/reservationsEvents/getAllreservationevents/${lang}`
-      );
-      setReservationData(response.data.reservations);
-      setError(""); 
-    } catch (error) {
-      console.error("Error fetching event reservations:", error);
-      setError("Error fetching event reservations.");
-      setReservationData([]); 
-    }
-  };
-
-  const fetchLandsReservations = async () => {
-    try {
-      const response = await axios.get(
-        `${API_URL1}/reservationLands/getreservationslands/${lang}`
-      );
-      setReservationData(response.data.reservations);
-      setError(""); 
-    } catch (error) {
-      console.error("Error fetching land reservations:", error);
-      setError("Error fetching land reservations.");
-      setReservationData([]); 
-    }
-  };
-
-  const handleButtonClick = (type) => {
-    setSelectedType(type);
   };
 
   const handleSeeDetails = (reservation) => {
-    if (selectedType === "chalets") {
-      navigate(`/detailsChaletPage/${reservation.id}`);
-    } else if (selectedType === "events") {
-      navigate(`/detailsEventsPage/${reservation.Available_Event?.id || reservation.available_event_id}`);
-    } else if (selectedType === "lands") {
-      navigate(`/landsDetails/${reservation.available_land_id}`);
-    }
+    navigate(`/detailsChaletPage/${reservation.id}`);
   };
 
   return (
@@ -87,81 +48,45 @@ function ReservationsDetails() {
           <div className="all-btn">
             <button
               className="create-btn"
-              onClick={() => handleButtonClick("chalets")}
+              onClick={fetchChaletsReservations}
             >
               Chalets Reservations
-            </button>
-            <button
-              className="create-btn"
-              onClick={() => handleButtonClick("events")}
-            >
-              Events Reservations
-            </button>
-            <button
-              className="create-btn"
-              onClick={() => handleButtonClick("lands")}
-            >
-              Lands Reservations
             </button>
           </div>
         </div>
 
         <div className="reservation-dates-table">
-          <h3>
-            {selectedType
-              ? `${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Reservations`
-              : "All Reservations"}
-          </h3>
+          <h3>Chalets Reservations</h3>
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Date</th>
-                {selectedType === "events" ? (
-                  <>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Event Title</th>
-                  </>
-                ) : selectedType === "chalets" ? (
-                  <>
-                    <th>Chalet Title</th>
-                    <th>Status</th>
-                  </>
-                ) : selectedType === "lands" ? (
-                  <>
-                    <th>Land Name</th>
-                    <th>Price</th>
-                    <th>Time</th>
-                  </>
-                ) : null}
+                <th>Initial Amount</th>
+                <th>Reserve Price</th>
+                <th>Total Amount</th>
+                <th>Cashback</th>
+                <th>Chalet Title</th>
+                <th>Status</th>
                 <th>See Details</th>
               </tr>
             </thead>
             <tbody>
-              {reservationData.length > 0 ? (
+              {
                 reservationData.map((reservation) => (
                   <tr key={reservation.id}>
-                    <td>{reservation.id}</td>
-                    <td>{new Date(reservation.date).toLocaleDateString()}</td>
-                    {selectedType === "events" ? (
-                      <>
-                        <td>{reservation.start_time}</td>
-                        <td>{reservation.end_time}</td>
-                        <td>{reservation.Available_Event?.title || "N/A"}</td>
-                      </>
-                    ) : selectedType === "chalets" ? (
-                      <>
-                        <td>{reservation.chalet ? reservation.chalet.title : "N/A"}</td>
-                        <td>{reservation.status}</td>
-                      </>
-                    ) : selectedType === "lands" ? (
-                      <>
-                        <td>{reservation.CategoriesLand?.title || "N/A"}</td>
-                        <td>{reservation.CategoriesLand?.price || "N/A"}</td>
-                        <td>{reservation.time || "N/A"}</td> 
-                      </>
-                    ) : null}
+                    <td>{reservation.id || "N/A"}</td>
+                    <td>
+                      {reservation.date
+                        ? new Date(reservation.date).toLocaleDateString()
+                        : "N/A"}
+                    </td>
+                    <td>{reservation.initial_amount || "N/A"}</td>
+                    <td>{reservation.reserve_price || "N/A"}</td>
+                    <td>{reservation.total_amount || "N/A"}</td>
+                    <td>{reservation.cashback || "N/A"}</td>
+                    <td>{reservation.chalet?.title || "N/A"}</td>
+                    <td>{reservation.status || "N/A"}</td>
                     <td>
                       <button
                         className="create-btn"
@@ -172,11 +97,7 @@ function ReservationsDetails() {
                     </td>
                   </tr>
                 ))
-              ) : (
-                <tr>
-                  <td colSpan={6}>{error || "No reservation data found"}</td>
-                </tr>
-              )}
+              }
             </tbody>
           </table>
         </div>
